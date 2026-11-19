@@ -10,7 +10,12 @@ import userRoutes from "./routes/users.js";
 
 const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
 
-const clientOrigin = process.env.CLIENT_ORIGIN || "http://localhost:5173";
+const clientOrigins = new Set(
+  (process.env.CLIENT_ORIGIN || "http://localhost:5173")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean),
+);
 const isProduction = process.env.NODE_ENV === "production";
 
 if (!mongoUri) throw new Error("MONGODB_URI (or MONGO_URI) must be set.");
@@ -20,10 +25,19 @@ if (isProduction && !process.env.SESSION_SECRET) throw new Error("SESSION_SECRET
 const app = express();
 if (isProduction) app.set("trust proxy", 1);
 app.use(helmet());
-app.use(cors({ origin: clientOrigin, credentials: true }));
+app.use(cors({
+  origin(origin, callback) {
+    callback(null, !origin || clientOrigins.has(origin));
+  },
+  credentials: true,
+}));
 app.use((req, res, next) => {
   const origin = req.get("origin");
-  if (["POST", "PUT", "PATCH", "DELETE"].includes(req.method) && origin && origin !== clientOrigin) {
+  const requestOrigin = `${req.protocol}://${req.get("host")}`;
+  if (["POST", "PUT", "PATCH", "DELETE"].includes(req.method)
+    && origin
+    && origin !== requestOrigin
+    && !clientOrigins.has(origin)) {
     res.status(403).json({ message: "Request origin is not allowed." });
     return;
   }
