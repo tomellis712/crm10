@@ -281,23 +281,13 @@ async function apiRequest(path, options = {}) {
 
   const headers = { ...options.headers };
   if (options.body !== undefined) headers["Content-Type"] = "application/json";
-  let response;
-  try {
-    response = await fetch(`/api${path}`, {
-      ...options,
-      credentials: "include",
-      headers,
-      body: options.body === undefined ? undefined : JSON.stringify(options.body),
-    });
-  } catch {
-    enableLocalApiMode();
-    return localApiRequest(path, options);
-  }
+  const response = await fetch(`/api${path}`, {
+    ...options,
+    credentials: "include",
+    headers,
+    body: options.body === undefined ? undefined : JSON.stringify(options.body),
+  });
   const payload = await response.json().catch(() => null);
-  if (response.status >= 500) {
-    enableLocalApiMode();
-    return localApiRequest(path, options);
-  }
   if (!response.ok) {
     const error = new Error(payload && payload.message ? payload.message : `Request failed with status ${response.status}.`);
     error.status = response.status;
