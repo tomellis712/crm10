@@ -38,7 +38,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({ template: "./index.html" }),
     new webpack.DefinePlugin({
-      "process.env.API_ENABLED": JSON.stringify(process.env.API_ENABLED || "false"),
+      "process.env.API_ENABLED": JSON.stringify(process.env.API_ENABLED || "true"),
     }),
   ],
   devServer: {

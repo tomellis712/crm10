@@ -1,32 +1,60 @@
-# Orbit CRM
+# Orbit CRM — React + Express + MongoDB + Vercel
 
-## Run the application
+## Stack
+- React 18
+- React Router
+- Webpack
+- Node.js / Express 5
+- MongoDB Atlas / Mongoose
+- Express sessions stored in MongoDB
+- Vercel
 
-From the repository root, install dependencies and start both the API and frontend:
+## Deploy to Vercel
 
-```sh
+1. Push this project to GitHub.
+2. Import the repository into Vercel.
+3. Keep the project root as the folder containing `package.json` and `vercel.json`.
+4. In **Vercel → Project → Settings → Environment Variables**, add:
+
+   - `MONGODB_URI` = your MongoDB Atlas connection string
+   - `SESSION_SECRET` = a long random secret
+   - `API_ENABLED` = `true`
+   - `NODE_ENV` = `production`
+
+   If you use the optional admin seed script, also add `ADMIN_NAME`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` locally when running the seed.
+
+5. In MongoDB Atlas, make sure the deployed Vercel function can reach the cluster. For a simple test deployment, Atlas Network Access can allow `0.0.0.0/0`; use a strong database password and tighten network access for production when appropriate.
+6. Redeploy the Vercel project.
+
+The frontend and API use the same Vercel domain. Browser requests such as `/api/auth/login` are rewritten to `api/index.js`, so the frontend does not need a hard-coded API URL.
+
+## Test after deployment
+
+Open:
+
+`https://YOUR-VERCEL-DOMAIN/api/health`
+
+Expected response:
+
+```json
+{"status":"ok","database":"connected"}
+```
+
+If the response says `database: "disconnected"` or returns `Database connection failed.`, check `MONGODB_URI` and MongoDB Atlas Network Access.
+
+## Local development
+
+Create `.env` from `.env.example`, then run:
+
+```bash
 npm install
 npm run dev
 ```
 
-The Webpack development server serves the same frontend at `http://localhost:5173`
-and on the machine's network address at port `5173`; it proxies `/api` requests
-to the API at `http://localhost:5000`. Run
-`npm run build` from the repository root to create the production frontend in
-`frontend/dist/`.
+The React development server runs on port 5173 and proxies `/api` to the Express server on port 5000.
 
-## Run without a backend
+## Security
 
-1. From `frontend/`, install packages with `npm install`.
-2. Start the frontend: `npm run dev:client`.
-3. Use a local demo account: Admin `jamie@studionorth.co` / `admin123`, Manager `taylor@studionorth.co` / `manager123`, or Member `alex@studionorth.co` / `member123`.
-
-Standalone mode stores accounts, sessions, and CRM data in this browser. It supports signup, sign-in, profile editing, and Admin user management, but its authentication and role checks are not secure for production. Do not use real credentials.
-
-## MongoDB backend
-
-The Express API lives in `frontend/api/`. Copy `frontend/.env.example` to `frontend/.env`, configure `MONGODB_URI` with your MongoDB connection string, and set a random `SESSION_SECRET` of at least 32 characters. `API_ENABLED=true` makes the single frontend use the API; API and network errors are shown rather than silently switching writes to browser storage. Local and network access use the same frontend and `/api` proxy. If the API is accessed from another origin directly, set `CLIENT_ORIGIN` to the allowed frontend origin(s), separated by commas. Run `npm run seed:admin` from the repository root once to create an Admin account, then run `npm run dev` from the root to start the API and frontend together. The API hashes passwords, stores sessions in MongoDB, sets an HttpOnly cookie, assigns self-registered users the Member role, and enforces Admin-only user-management routes.
-
-The existing `MONGO_URI` variable is also accepted as an alias. For MongoDB Atlas, use the connection string from your cluster, create a database user, and allow your development machine's IP in Network Access. Keep `.env` private; it is excluded from version control.
-
-For production, use HTTPS, a strong private session secret, set `NODE_ENV=production` and `CLIENT_ORIGIN` to the deployed frontend origin, and configure the web server to proxy `/api` to the Node API.
+- Do not commit `.env`.
+- Do not put `MONGODB_URI` or `SESSION_SECRET` into React source code.
+- If a real MongoDB password was previously committed or shared, rotate that password in MongoDB Atlas.

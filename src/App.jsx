@@ -491,7 +491,7 @@ function Header({ title, onMenu, onSearch, onNotifications, onLogout, onUpdatePr
           </button>
           {profileOpen && <div className="account-menu" role="menu" aria-label="Account menu">
             <div className="account-menu-person">
-                <Avatar initials={getInitials(user.name)} color="dark" image={user.image} />
+              <Avatar initials={getInitials(user.name)} color="dark" image={user.image} />
               <span><strong>{user.name}</strong><small>{user.email}</small><span className={`role-badge ${user.role.toLowerCase()}`}>{user.role}</span></span>
             </div>
             <div className="account-menu-divider" />
@@ -676,8 +676,8 @@ function LoginPage({ onLogin, onSignup, usingLocalMode }) {
         <button className="button button-primary auth-submit" type="submit" disabled={submitting}>{submitting ? "Please wait..." : isSignup ? "Create account" : "Sign in"}</button>
       </form>
       <p className="auth-switch">{isSignup ? "Already have an account?" : "New to Orbit?"} <button type="button" onClick={() => { setIsSignup((current) => !current); setName(""); setEmail(""); setPassword(""); setImage(""); setError(""); }}>{isSignup ? "Sign in" : "Create an account"}</button></p>
-      {usingLocalMode && <div className="demo-credentials"><strong>Local demo accounts</strong><span>Admin · jamie@studionorth.co · admin123</span><span>Manager · taylor@studionorth.co · manager123</span><span>Member · alex@studionorth.co · member123</span></div>}
-      <p className="auth-disclaimer">{usingLocalMode ? "Standalone mode is for demo use only. Accounts and role checks are stored in this browser; never use real credentials." : "Passwords are stored as secure hashes on the server. Self-registered accounts have Member access."}</p>
+      <div className="demo-credentials"><strong>Local demo accounts</strong><span>Admin · jamie@studionorth.co · admin123</span><span>Manager · taylor@studionorth.co · manager123</span><span>Member · alex@studionorth.co · member123</span></div>
+
     </section>
   </main>;
 }
@@ -992,8 +992,8 @@ function LandingPage() {
       </section>
       <section className="landing-trust"><span>BUILT FOR PEOPLE-FIRST TEAMS</span><div><strong>Studio North</strong><strong>layers</strong><strong>stellar<span>labs</span></strong><strong>goodwork</strong><strong>circles</strong></div></section>
       <section className="landing-features" id="features"><div className="section-intro"><span className="hero-kicker"><i /> EVERYTHING IN ONE PLACE</span><h2>Make every interaction <em>count.</em></h2><p>The tools to stay thoughtful, organized, and one step ahead.</p></div><div className="feature-grid"><article><span className="feature-icon purple"><Icon name="users" size={20} /></span><h3>People, not spreadsheets</h3><p>Keep customer details, company context, and conversation history easy to find.</p></article><article><span className="feature-icon orange"><Icon name="briefcase" size={20} /></span><h3>A pipeline you can trust</h3><p>See what’s moving, what needs attention, and where your next win may come from.</p></article><article><span className="feature-icon green"><Icon name="check" size={20} /></span><h3>Follow through, naturally</h3><p>Turn good intentions into clear next steps with tasks and timely follow-ups.</p></article></div></section>
-      <section className="landing-workflow" id="workflow"><div><span className="hero-kicker"><i /> SIMPLE BY DESIGN</span><h2>Less admin.<br/><em>More connection.</em></h2><p>Orbit gives your team a shared rhythm—from the first hello to the next big opportunity—without getting in the way of the work.</p><Link className="text-button" to="/login">Take a look inside <Icon name="arrow" size={16} /></Link></div><div className="workflow-steps"><div><b>01</b><span><strong>Bring people together</strong><small>Build a thoughtful home for every relationship.</small></span></div><div><b>02</b><span><strong>Know what’s next</strong><small>Keep deals and follow-ups visible to your team.</small></span></div><div><b>03</b><span><strong>Make progress visible</strong><small>See the momentum behind your customer work.</small></span></div></div></section>
-      <section className="landing-cta" id="get-started"><span className="hero-kicker"><i /> A FRESH START FOR YOUR CRM</span><h2>Good relationships<br/>deserve a great system.</h2><p>Start exploring a calmer way to manage your customer relationships.</p><Link className="button button-primary" to="/login">Get started with Orbit <Icon name="arrow" size={17} /></Link></section>
+      <section className="landing-workflow" id="workflow"><div><span className="hero-kicker"><i /> SIMPLE BY DESIGN</span><h2>Less admin.<br /><em>More connection.</em></h2><p>Orbit gives your team a shared rhythm—from the first hello to the next big opportunity—without getting in the way of the work.</p><Link className="text-button" to="/login">Take a look inside <Icon name="arrow" size={16} /></Link></div><div className="workflow-steps"><div><b>01</b><span><strong>Bring people together</strong><small>Build a thoughtful home for every relationship.</small></span></div><div><b>02</b><span><strong>Know what’s next</strong><small>Keep deals and follow-ups visible to your team.</small></span></div><div><b>03</b><span><strong>Make progress visible</strong><small>See the momentum behind your customer work.</small></span></div></div></section>
+      <section className="landing-cta" id="get-started"><span className="hero-kicker"><i /> A FRESH START FOR YOUR CRM</span><h2>Good relationships<br />deserve a great system.</h2><p>Start exploring a calmer way to manage your customer relationships.</p><Link className="button button-primary" to="/login">Get started with Orbit <Icon name="arrow" size={17} /></Link></section>
     </main>
     <footer className="landing-footer"><Link to="/" className="landing-brand"><span className="brand-mark">o</span><span className="brand-name">orbit<span>.</span></span></Link><span>Made for meaningful relationships.</span><span>© 2024 Orbit CRM</span></footer>
   </div>;

@@ -5,6 +5,7 @@ import MongoStore from "connect-mongo";
 import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
+import mongoose from "mongoose";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 
@@ -16,7 +17,7 @@ const clientOrigins = new Set(
     .map((origin) => origin.trim())
     .filter(Boolean),
 );
-const isProduction = process.env.NODE_ENV === "production";
+const isProduction = process.env.NODE_ENV === "production" || process.env.VERCEL === "1";
 
 if (!mongoUri) throw new Error("MONGODB_URI (or MONGO_URI) must be set.");
 if (isProduction && !process.env.SESSION_SECRET) throw new Error("SESSION_SECRET must be set in production.");
@@ -77,7 +78,7 @@ const authLimiter = rateLimit({
 
 console.log("OK!");
 
-app.get("/api/health", (req, res) => res.json({ status: "ok" }));
+app.get("/api/health", (req, res) => res.json({ status: "ok", database: mongoose.connection.readyState === 1 ? "connected" : "disconnected" }));
 app.use("/api/auth/login", authLimiter);
 app.use("/api/auth/signup", authLimiter);
 app.use("/api/auth", authRoutes);
